@@ -22,8 +22,11 @@ There are some languages out there already that begin to address this domain. So
 ## Language design
 "Rules that run." In the perfect world, a RuleBook program would read just like the rules to a board game. A slightly different way of phrasing that, but more achievable, is that by reading a program one would know how to play the game (i.e. the syntax might not be perfect, but it will be clear enough to a non-programmer). A program will, much like a board game rulebook, be divided into some basic sections - board, pieces, setup, turn overview, details of legal moves, win conditions.
 When run, a program will play the game, accepting user inputs to describe moves each player is making. Output will be some visual representation of the current state of the game. 
+
 I see this as being a very object-oriented design, with variables for players, pieces, board squares, etc. Since board games are a very physical thing, abstracting to OOP should be a natural transition.
+
 From a practical perspective, a lot of rules in rulebooks have implicit meanings that would need to be more fully described. I want to use some form of indirection (i.e. variables/methods) to allow the main program to say, for example "A bishop can move diagonally" and then elsewhere define in more precise terms what "diagonally" means (if I don't give that as a built-in). One idea I have for this is to give some sort of markup (i.e. the rule might read "A bishop can move (term:) diagonally"), and then have an appendix section where all the terms are specified more completely.
+
 To make the above factors more practical, I intend to write RuleBook as an internal DSL, potentially on top of Scala as a host language (primarily for its highly manipulable syntax, though I also anticipate clean pattern matching being helpful to check states/moves). This means that compile time errors will be handled by Scala. At this time, the only runtime error I percieve occuring is "invalid move", at which point the user will be told as much and prompted to provide another move. The system will also potentially need to detect when players have no legal moves.
 
 ## Example computations
