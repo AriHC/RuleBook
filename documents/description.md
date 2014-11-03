@@ -16,7 +16,7 @@ As a stretch, I would like the system to eventually be able to handle games wiht
 
 ### Existing languages
 There are some languages out there already that begin to address this domain. Some examples I found are [Zillions of Games (ZoG)](http://www.zillions-of-games.com/) and the [Game Description Language](http://logic.stanford.edu/classes/cs227/2013/readings/gdl_spec.pdf). Based on the syntax snipets I was able to find, these seem quite similar to what I had in mind - you describe game states, legal moves, etc. I can look at their syntaxes for elemnts to consider adding, or a general idea of how one may specify certain concepts, but I see two primary areas where the languages are lacking.
-1. Readability. It can be pretty hard to understand what the code is specifying (see my design ideas [below](#Language design)).
+1. Readability. It can be pretty hard to understand what the code is specifying (see my design ideas [below](#language-design)).
 2. Extensibility and logic. The languages seem to have a fixed set of commands, limiting them to a very specific scope (though as the Zillions of Games community has shown, game spaces are huge, and there is still a giant variety of games to be explored within even a narrow scope). My primary audience is those looking to convert existing board games to the digital sphere, and each game is likely to have something unique and special about it, that may not be accounted for by an external DSL.
 
 ## Language design
