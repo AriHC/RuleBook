@@ -1,0 +1,182 @@
+// Tic-Tac-Toe
+
+Players: // Colons will probably turn into braces around section in final syntax, for ease of implementation
+2
+
+Board:
+3 x 3 // 3x3 array of Option(None)
+Empty shown as '_' // Option(None) gets displayed as '_'
+// Alternative would be "Occupied by x" which translates to Some(x),
+// and will use something like x.displayChar as the display 
+
+Pieces:
+xPiece is tic-tac-toe-piece shown as 'X' owned_by Player 1
+oPiece is tic-tac-toe-piece shown as 'O' owned_by Player 2
+
+Set-up:
+Player 1 has 5 xPiece
+Player 2 has 5 oPiece
+
+Move:
+choose target location
+// Choose [name] [type] gets input, confirms it is of the correct type, stores as [name] 
+Legal if Board at target is Empty
+// legal if defines legal moves.
+Place_at target // Place_at will be user defined
+
+Win Condition:
+three_in_a_row by current_player // would need to define this method somewhere 
+// "by" may be like "to/from", a sugary identity function for players
+
+Definitions:
+tic-tac-toe-piece is piece with owner // subclassing piece, adding trait
+
+def Place_at (location:Coordinate) =
+	Take tic-tac-toe-piece from current_player // take gets a piece of specified type.
+	// May need developer to implement logic of which piece to take as override in player class.
+	// I think you'll also be able to use take on board spaces, again overridable,
+	// for games with movement from one space to another
+	Put taken piece at location // Put predefined, maybe take/taken to get/set
+
+trait owner {
+	var owner : Player
+	def owned_by (new_owner:Player) = {owner = new_owner}
+}
+
+
+********************************************************************************************
+// Checkersish
+// No kings, only forward movement, single jumps, no forced jumps.
+
+Players: // Colons will probably turn into braces around section in final syntax, for ease of implementation
+2
+
+Board:
+8 x 8
+Empty shown as '_'
+
+Pieces:
+blackPiece is checker shown as 'B' owned_by Player 1 facing Up
+redPiece is checker shown as 'R' owned_by Player 2 facing Down
+
+Set-up:
+board at (0,0), (0,2), ... has blackPiece
+board at (8,8), (8,6), ... has redPiece // would need to be filled in of course
+
+Move:
+choose start_space location
+// Choose [name] [type] gets input, confirms it is of the correct type, stores as [name] 
+Legal if Board at target is owned_by currentPlayer
+// legal if defines legal moves.
+choose end_space location
+legal if Board at next is Empty
+legal if diagonal from location to next or jump from location to next // from/to probably identity functions on coordinates, sugar
+Take checker from start_space
+Put taken checker at end_space
+
+Win Condition:
+all pieces on board owned_by currentPlayer // requires some way of getting all the pieces on the board
+
+Definitions:
+checker is piece with owner with direction
+
+def diagonal(from : Coordinate, to : Coordinate) {
+	// Logic about to = (from.x + 1, from.y + direction) | (from.x - 1, from.y + direction), where direction is based on currentPlayer's direction
+}
+
+def jump(from : Coordinate, to : Coordinate) {
+	// Logic about being doubly diagonal, there being an enemy piece in-between
+}
+
+trait owner {
+	var owner : Player
+	def owned_by (new_owner:Player) = {owner = new_owner}
+}
+
+trait direction {
+	var direction : X// Enum?
+	def facing (new_direction:X) = {direction = new_direction}
+}
+
+************************************************************************************
+Grammar summary:
+
+Since this is an internal language, EBN doesn't quite make sense. Instead, I'd like
+to describe the provided structures
+
+definitions : This section should be where native scala is placed, so the remaining areas are readable.
+players : defines how many players the game is for. For now the scope will limit this to a single number.
+  Players can then be accessed as "Player [# indexed from 1]" (I may choose not to capitalize this in final syntax),
+  or current_player (actually I may aim for "current player" as the syntax for this)
+board : describes the board. Should give size in "m x n" format, and describe how empty spaces are shown
+  using a "shown as" clause
+pieces : describes the pieces of the game. If I can make it possible, ideally "x is y" would mean
+  "class x extends y", otherwise this syntax may need to change a lot. The default provided piece class has
+  only a way it is displayed, modified by "shown as". Notice in my examples I actually define parent classes
+  in the definitions. I think pieces may be a syntactic sugar section; a user could just define all their
+  pieces in the definitions.
+setup : Initializes pieces. Pieces can be given to players using "has [number] [piece type]". By default,
+  players will have just a sequence of pieces and no way to access specific pieces, but one could override
+  this to control order. In magical "I hope I can find a way to do this world", each type of piece is stored
+  separately, so the user doesn't have to write extra to deal with that (i.e. you could write
+    Player 1 has 10 infantry
+    Player 1 has 2 tank
+  and then later say
+    Take tank from Player 1
+  and there would be no problem.
+  Pieces can be put on the board using "board at coordinate [[coordinate] ...] has [piece type]" - note that
+  for now scope includes only one piece per space, so overriding pieces will clobber one another.
+move : Moves will require user input. Planned syntax for this is "choose [varname] [type]". Ideally this would
+  present a prompt to the user saying the same thing (encouraging good variable naming). The input would then
+  be parsed (maybe I make an "inputable" trait or something that requires the parsing method (converting string
+  to object of the type), which any inputable type would need. Coordinates will have this by default). Note that
+  as it currently stands, syntax does not allow for sequences. This would be nice, but I'm unsure how to go about
+  doing it. I might mess around with that if I get everything else working, so you could say
+  "choose jump sequence of location", and then "jump" might be "(0,0),(2,2),(4,0)" to describe a double jump.
+  There is also the "legal if" clause, which checks the condition. If the move is illegal, it will not be done
+  and the user will be prompted for a new move. The final pieces of syntax I have so far here are "take [type] from [coordinate/player]"
+  and "taken [type]", along with "Put [piece] at [coordinate]". The first is a mutating getter (so it actually
+  takes the piece away from the source), the second accesses whatever piece was taken, and the third is a setter. For completion,
+  I'd probably want "give [piece] to [player]"
+win condition: At the end of each turn, the win condition for the current player will be checked.
+  
+See semantic_idea.txt for how all these would be brought together.
+
+Shorter summary of features I would need to implement, based on these examples so far:
+* Players
+  * initialization from # of players
+  * player [#] accessor
+  * current_player accessor
+  * has [#] [piece type] - may use give?
+* Board
+  * m x n
+  * empty shown as
+  * all pieces
+  * display
+* Pieces
+  * [a] is [b] subclassing
+  * make sure traits work close to how I want them to
+    * specifically that I can somehow set static class variables; i.e. that any blackPiece is owned by player 1
+  * shown as
+* setup
+  * board at [location list] has [type]
+  * player has [#] [type]
+* Move
+  * Choose
+  * Take/taken - from board, player
+  * put/give - on board, to player
+  * legal if - I may want to make this "legal if [condition] ('[error message]')" if I could get that syntax to work;
+    i.e. you could say 
+      legal if board at placement is empty ("you must place your piece on an empty square")
+* Win condition
+* Misc
+  * is - equality comparison
+  * various identity functions (to, from, by)
+* Definitions
+  * Make sure anything defined here is callable from elsewhere in the code
+* Semantics
+  * Initialize players & board (hopefully just defining the sections does that)
+  * Loop
+    * display board
+    * moves & enforcing legality
+    * win condition check

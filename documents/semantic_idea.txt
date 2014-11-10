@@ -1,0 +1,12 @@
+* Initialize board, players according to board & players
+* Put pieces on board/give to players according to set up
+* Starting with player 1, loop:
+  * Print current board state
+  * No legal moves (probably done in form of bad runtime algorithm that tests all possible moves)? End game as stalemate
+    * This may be very difficult and a stretch goal; as defining all possible moves is very hard.
+  * Loop:
+    * Get move input from player
+    * If legal move, break
+  * Perform move
+  * Check win condition for current player
+    * If won, end game and note they won
