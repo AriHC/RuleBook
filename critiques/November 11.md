@@ -13,8 +13,16 @@ haven't completely defined the IR, so you can figure out if it is possible or no
 I would probably try to simplify the way you specify legal moves. I feel it would get
 very difficult to specify what moves are legal for chess with your current syntax. 
 
-For your pseudo-variables, do you want to just essentially past the definition of each 
-term wherever the term is? That could be possible, but may get messy. 
+## Thoughts about Variables
 
+Do you want to just essentially paste the definition of each 
+term wherever the term is? That would likely be easier to implement, but may be harder
+for the program writer to conceptualize. 
 
+If you want more context to be included in the use of the variables, it will be somewhat
+harder to implement but may be easier for the user to understand.
+
+If you will only be using take/taken for the piece being used, it may be easier if you just
+define either a single variable to hold the currently held piece and some other way to
+specify which user is holding it or two variables, one for each user. 
 
