@@ -1,3 +1,3 @@
 package ruleBook
 
-case class GamePiece (display:Char)
+class GamePiece (val display:Char)
