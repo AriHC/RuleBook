@@ -3,12 +3,29 @@ package samples
 import ruleBook._
 
 object tic_tac_toe extends App {
-  Play { Game ("tic_tac_toe").
+  Rules {
     Players {
       2
-    }.
-    Board {
-      1 x 5
     }
-  }
+    
+    Board {
+      3 x 3
+    }
+    
+    Set_up {
+      Player(1).has(5)(xPiece)
+      Player(2).has(5)(oPiece)
+    }
+    
+    Move {
+      println(Game.current_player)
+      val line = readLine()
+      Legal_if {line == "heyo!"}
+    }
+    
+    Definitions
+	  class tic_tac_toe_piece(display:Char, val owner:Int) extends GamePiece(display)
+	  case object xPiece extends tic_tac_toe_piece('x',0)
+	  case object oPiece extends tic_tac_toe_piece('o',1)
+  } 
 }
