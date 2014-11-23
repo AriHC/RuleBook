@@ -20,7 +20,9 @@ object tic_tac_toe extends App {
     Move {
       println(Game.current_player)
       val line = readLine()
-      Legal_if {line == "heyo!"}
+      Choose space
+      println(chosen space 1)
+      Legal_if {line == Game.current_player.toString()}
     }
     
     Definitions
