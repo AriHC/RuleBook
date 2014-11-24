@@ -3,6 +3,13 @@ import scala.collection.mutable.Buffer
 
 class GameMove(val spaces : Buffer[Coordinate]) {
   def space (index : Int) = spaces(index - 1)
+  override def toString = {
+    var result = "{"
+    spaces foreach { space =>
+      result += space.toString + " "
+    }
+    result.trim + "}"
+  }
 }
 
 object GameMove {

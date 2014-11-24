@@ -1,11 +1,12 @@
 package ruleBook
+import scala.collection.mutable.Set
 
-class GamePlayer(var pieces : Seq[GamePiece]) {
-  def has(num:Int)(piece:GamePiece) = {
-    pieces = pieces ++ Seq.fill(num){piece}
-  }
+class NoPlayerPieceException(playerNumber:Int) extends NoPiecesException("Player " + playerNumber)
+ 
+class GamePlayer(override val name: String) extends GamePieceHolder {
+  override def toString = name
 }
 
 object GamePlayer {
-  def apply() = new GamePlayer(Seq.empty[GamePiece])
+  def apply(name:String) = new GamePlayer(name)
 }
