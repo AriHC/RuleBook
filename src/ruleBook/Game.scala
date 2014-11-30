@@ -19,6 +19,13 @@ object Game {
         try {
           move()
           moved = true
+          if (win_check()) {
+            current_outcome = Some(Win(players(current_player)))
+          } else if (tie_check()) {
+            current_outcome = Some(Stalemate())
+          } else if (loss_check()) {
+            current_outcome = Some(Loss(players(current_player)))
+          }
         } catch {
           // NOTE: as currently written, if the move breaks after already doing some things,
           // they won't be reversed. So coders must be sure to not make any changes until they're
@@ -43,9 +50,10 @@ object Game {
       current_player = (current_player + 1) % numPlayers
     }
     current_outcome match {
-      case Some(Win(player)) => player.name + " wins!"
-      case Some(Loss(player)) => player.name + " loses!"
-      case Some(_) => "Stalemate!"
+      case Some(Win(player)) => println(player.name + " wins!")
+      case Some(Loss(player)) => println(player.name + " loses!")
+      case Some(_) => println("Stalemate!")
+      case None => println("No one wins.") // Should be an unreachable case
     }
     // TODO: Do something with current outcome
     // TODO: Something different with losses vs. wins? Like losses eliminate players in 

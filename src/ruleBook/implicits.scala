@@ -7,12 +7,12 @@ package object ruleBook {
     def x(n:Int) = SpaceList(Seq.tabulate(m,n){(row,col) => GameSpace("(" + row.toString + "," + col.toString + ")")})
   }
   
-  case class InputIndexFrom1(val playerIndex:Int) {
-    override def toString = playerIndex.toString
-  }
+ // case class InputIndexFrom1(val playerIndex:Int) {
+ //   override def toString = playerIndex.toString
+ // }
   // These will help convert from player indecies to game indecies, though not vice-versa.
-  implicit def inputIndexFrom1(i:Int) = InputIndexFrom1(i)
-  implicit def indexFromIndexFrom1(index:InputIndexFrom1) = index.playerIndex - 1
+//  implicit def inputIndexFrom1(i:Int) = InputIndexFrom1(i)
+//  implicit def indexFromIndexFrom1(index:InputIndexFrom1) = index.playerIndex - 1
    
   implicit class PieceGenerator(val num:Int) {
     def of(piece:GamePiece) : Set[GamePiece] = {
@@ -31,7 +31,7 @@ package object ruleBook {
     def is(right:A) = left == right
     def is_not(right:A) = left != right
   }
-  implicit class boolComparable(val left:Boolean) {
+  implicit class logicComparable(val left:Boolean) {
     def and(right : =>Boolean) = left && right
     def or(right : =>Boolean) = left || right
   }
@@ -41,9 +41,24 @@ package object ruleBook {
     def is(unused:Empty) = left.isEmpty
     def is_not(unused:Empty) = !left.isEmpty
   }
-  implicit class coordinateEmptyComparable(val left:Coordinate) {
+  def in_bounds = new InBounds
+  class InBounds
+  implicit class coordinateEmptyBoundsComparable(val left:Coordinate) {
     def is(unused:Empty) = left.isEmpty
-    def is_not(unused:Empty) = !left.isEmpty
+    def is_not(unused:Empty) = !this.is(unused)
+    def is(unused:InBounds) = { 
+      try {
+        board at left
+        true
+      } catch {
+        case e:OutOfBoundsException => {
+          false
+        }
+      }
+    }
+    def is_not(unused:InBounds) = {
+      !this.is(unused)
+    }
   }
   
   class IllegalMoveException(val move:String) extends Exception
@@ -57,7 +72,7 @@ package object ruleBook {
     new PlayerAction
   }
   class PlayerAction {
-    def number(n:InputIndexFrom1) = Game.players(n)
+    def number(n:Int) = Game.players(n - 1) // n indexes from 1
   }
   def Board (spaces:SpaceList) = {
     Game.board = GameBoard(spaces)
@@ -76,6 +91,21 @@ package object ruleBook {
       actions
     }
   }
+  def Win_Condition (actions: =>Boolean) = {
+    Game.win_check = ()=> {
+      actions
+    }
+  }
+  def Tie_Condition (actions: =>Boolean) = {
+    Game.tie_check = ()=> {
+      actions
+    }
+  } 
+  def Lose_Condition (actions: =>Boolean) = {
+    Game.loss_check = ()=> {
+      actions
+    }
+  }
   def Legal = { new LegalChecker }
   class LegalChecker {
     def provided (action: =>Boolean) = {
@@ -87,6 +117,7 @@ package object ruleBook {
   def Set_up (actions:Unit) = {}
   def Definitions = {}
   def current_player = Game.players(Game.current_player)
+  def current_player_number = Game.current_player + 1 // Player index
   
   
   /* Choose Command */
@@ -95,7 +126,8 @@ package object ruleBook {
   }
   class MoveChoice {
     def readCoordinates(invalid : (Int,Int)=>Boolean, num:Int, description:String) = {
-      val input = scala.io.StdIn.readLine()
+      println("Choose " + description + " " + num + " space-separated coordinates")
+      val input = readLine()
       val tokens = input.split(" ")
       val result = tokens map {Coordinate(_)}
       if (invalid(result.size, num)) {
