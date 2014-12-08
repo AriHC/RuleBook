@@ -14,7 +14,7 @@ The jar is also included in the top level directory, or can be built yourself by
 As it currently stands, players take turns making moves. A prompt should appear letting you know who's turn it is, and what kind of move is expected. A move is specified as a series of space-separated coordinates. For example, ```(1,2) (3,4)```. The parentheses and comma are necessary, and do not put extra spaces. If your move is not specified, or is illegal (such as trying to place a piece over someone else's in tic-tac-toe), you'll get an error message and a prompt to enter a new move. Keep playing until the game ends.
 
 ## Writing RuleBook Games
-A stylistic principle of RuleBook is that games should be readable. To that end, the code is organized like a real rule book for a game might be. Let's step through the code in [tic-tac-toe](samples/src/main/scala/Tic_tac_toe.scala). (If you're just looking for the variables and functions you have access too, check out the [cheat sheet](#cheat_sheet) at the bottom)
+A stylistic principle of RuleBook is that games should be readable. To that end, the code is organized like a real rule book for a game might be. Let's step through the code in [tic-tac-toe](samples/src/main/scala/Tic_tac_toe.scala). (If you're just looking for the variables and functions you have access too, check out the [cheat sheet](#cheat-sheet) at the bottom)
 
 ### Initialization
 As mentioned above, all we need to do to have access to RuleBook is ```import ruleBook._```
@@ -80,7 +80,7 @@ If the legality check doesn't pass, no movement will happen, and they'll get to 
 Let's break this down.
 
 #### Getting user input
-For now, all moves must be a list of spaces. For details on formatting, see [how to play](#playing_rulebook_games). As a developer, all you need to know is this:
+For now, all moves must be a list of spaces. For details on formatting, see [how to play](#playing-rulebook-games). As a developer, all you need to know is this:
 ```
 Choose [up_to/exactly/at_least] [number] board space[s]
 ```

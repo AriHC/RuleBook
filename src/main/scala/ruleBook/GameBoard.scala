@@ -67,6 +67,7 @@ class GameBoard(val spaceList:SpaceList) {
       case e:IndexOutOfBoundsException => throw new OutOfBoundsException(coord)
     }
   }
+  def at(row:Int, col:Int) : GameSpace = this.at(Coordinate(row-1, col-1))
   // iterate over coordinates
   def foreach_coordinate (action : (Coordinate)=>{}) = {
     var row = 0
