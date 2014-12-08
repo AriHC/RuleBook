@@ -1,36 +1,30 @@
-package samples.t_t_t
+package samples.connect_four
 
 import ruleBook._
 
-object tic_tac_toe_with_movement extends App {
+object Connect_Four extends App {
   Rules {
     Players {
       2
     }
     
     Board {
-      3 x 3
+      6 x 7
     }
     
     Set_up {
-      Player number 1 gets (5 of new xPiece)
-      Player number 2 gets (5 of new oPiece)
+      Player number 1 gets (21 of new xPiece)
+      Player number 2 gets (21 of new oPiece)
     }
     
     Move {
-      // These rules describe tic-tac-toe where instead of placing
-      // a piece you can move someone else's instead. Just because.
-      Choose up_to 2 board spaces
-      if ((number_of spaces chosen) is 1) {
-        place_piece
-      }
-      else if ((number_of spaces chosen) is 2) {
-        move_piece
-      }
+      Choose exactly 1 board space
+      place_piece
+      piece_falls
     }
 
     Win_Condition {
-      three_in_a_row
+      four_in_a_row
     }
     
     Tie_Condition {
@@ -44,11 +38,17 @@ object tic_tac_toe_with_movement extends App {
         Take pieces (1) from current_player
         board at (chosen space 1) gets taken_pieces
       }
-      def move_piece = {
-        Legal provided { (board at (chosen space 1) is_not empty) and
-          (board at (chosen space 2) is empty) }
-        Take pieces (1) from (board at (chosen space 1))
-        board at (chosen space 2) gets taken_pieces
+      def piece_falls {
+        var current_space = chosen space 1
+        var falling_space = Coordinate south_of current_space
+        while ((falling_space is in_bounds) and
+            (falling_space is empty)) {
+          Take pieces (1) from current_space
+          falling_space gets taken_pieces
+
+          current_space = falling_space
+          falling_space = Coordinate south_of current_space
+        }
       }
       def all_spaces_full = {
         var full_so_far = true
@@ -57,8 +57,8 @@ object tic_tac_toe_with_movement extends App {
         }
         full_so_far
       }
-      def three_in_a_row = {
-        x_in_a_row(3)
+      def four_in_a_row = {
+        x_in_a_row(4)
       }
       def x_in_a_row(x:Int) = {
         var found = false

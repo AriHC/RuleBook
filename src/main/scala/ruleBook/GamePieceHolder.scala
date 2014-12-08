@@ -18,8 +18,8 @@ trait GamePieceHolder {
 	def foreach(u : GamePiece=>Any) = pieces.foreach(u(_))
 	def piecesString = {
 	  var result = "{"
-	  pieces foreach { piece =>
-	    result += piece.display + " "
+	  pieces foreach {
+	    result += _.display + " "
 	  }
 	  result.trim + "}"
 	}
