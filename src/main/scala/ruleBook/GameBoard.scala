@@ -1,13 +1,19 @@
+/*
+ * Classes describing a game board
+ * Author: Ari Hausman-Cohen
+ * For HMC CS111 Fall 2014
+ */
 package ruleBook
 import scala.collection.mutable.Set
 
-
+// Basically a wrapper to define how a board's spaces are defined
 case class SpaceList(spaces:Seq[Seq[GameSpace]])
+
+// Coordinates
+class CoordinateFormatException(val coord:String, val requiredFormat : String = "(row,column)") extends Exception
 case class Coordinate(row:Int, col:Int) {
   override def toString = "(" + (row + 1).toString + "," + (col + 1).toString + ")"
 }
-
-class CoordinateFormatException(val coord:String, val requiredFormat : String = "(row,column)") extends Exception
 object Coordinate {
   def apply(str:String) : Coordinate = {
     if ((str take 1 is "(") && (str takeRight 1 is ")")) {
@@ -23,7 +29,8 @@ object Coordinate {
     }
     throw new CoordinateFormatException(str)
   }
-  
+
+  // Access relative coordinates
   def north_of(coord:Coordinate) = {
     Coordinate(coord.row - 1, coord.col)
   }
@@ -49,9 +56,9 @@ object Coordinate {
     Coordinate(coord.row - 1, coord.col - 1)
   }
 }
-class OutOfBoundsException(val coord:Coordinate) extends Exception
-class NoBoardPieceException(coord:Coordinate) extends NoPiecesException(coord.toString)
 
+// The board itself
+class OutOfBoundsException(val coord:Coordinate) extends Exception
 class GameBoard(val spaceList:SpaceList) {
   def at(coord:Coordinate) : GameSpace = {
     try {
@@ -60,6 +67,7 @@ class GameBoard(val spaceList:SpaceList) {
       case e:IndexOutOfBoundsException => throw new OutOfBoundsException(coord)
     }
   }
+  // iterate over coordinates
   def foreach_coordinate (action : (Coordinate)=>{}) = {
     var row = 0
     for (row <- 0 to spaceList.spaces.size - 1) {

@@ -1,3 +1,8 @@
+/*
+ * Trait for any class that can hold pieces (players, spaces, etc.)
+ * Author: Ari Hausman-Cohen
+ * For HMC CS111 Fall 2014
+ */
 package ruleBook
 import scala.collection.mutable.Set
 

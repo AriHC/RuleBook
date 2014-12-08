@@ -1,3 +1,9 @@
+/*
+ * A GameMove is a wrapper around a sequence of spaces.
+ * This could bear to be better generalized.
+ * Author: Ari Hausman-Cohen
+ * For HMC CS111 Fall 2014
+ */
 package ruleBook
 import scala.collection.mutable.Buffer
 

@@ -1,3 +1,10 @@
+/*
+ * The underlying game model -
+ * players take turns making moves until
+ * one of the ending conditions is met.
+ * Author: Ari Hausman-Cohen
+ * For HMC CS111 Fall 2014
+ */
 package ruleBook
 
 object Game {
@@ -19,6 +26,8 @@ object Game {
         try {
           move()
           moved = true
+          // In the future, it may be better to make outcomes not necessarily
+          // tied to current player
           if (win_check()) {
             current_outcome = Some(Win(players(current_player)))
           } else if (tie_check()) {
@@ -42,8 +51,8 @@ object Game {
 	      case e:MoveFormatException => {
 	        println(e.move + " is not a valid move (" + e.info + ").")
 	      }
-	      case e:NoPiecesException => {
-	        println(e.loc + " has no pieces.")
+	      case e:OutOfPiecesException => {
+	        println(e.name + " has no pieces.")
 	      } 
         }
       }
@@ -55,7 +64,6 @@ object Game {
       case Some(_) => println("Stalemate!")
       case None => println("No one wins.") // Should be an unreachable case
     }
-    // TODO: Do something with current outcome
     // TODO: Something different with losses vs. wins? Like losses eliminate players in 
     // multiplayer games maybe.
   }

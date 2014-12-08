@@ -1,3 +1,8 @@
+/*
+ * Class for a space on a board.
+ * Author: Ari Hausman-Cohen
+ * For HMC CS111 Fall 2014
+ */
 package ruleBook
 
 class GameSpace(override val name:String) extends GamePieceHolder
