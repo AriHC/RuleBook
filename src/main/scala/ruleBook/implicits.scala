@@ -1,6 +1,5 @@
 package object ruleBook {  
   import scala.language.implicitConversions
-  import scala.reflect.runtime.universe._   
   import scala.collection.mutable.Set
   
   implicit class BoardDimension(val m:Int) {
