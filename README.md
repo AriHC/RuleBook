@@ -126,4 +126,74 @@ Definitions
 In this section, put whatever Scala code you want. It's suggested for things like methods and class inheritances. Note that this section _DOES NOT_ get braced in, otherwise problems will occur. Sorry. Notice in this example we're extending the piece class - that way we can specify not just a ```display``` character, but also an owner (this matters here, but in other games, like mancala, pieces may be up for grabs by either player). Note that we override the copy method of ```GamePiece``` because we want to be able to copy all relevant information when generating our pieces during setup.
 
 ## Cheat Sheet
-... Will be coming in a future push
+
+### Ordering
+```
+Rules {
+  Players {
+    ...
+  }
+  Board { 
+    ...
+  }
+  Set_up {
+    ...
+  }
+  Move {
+    ...
+  }
+  Win/Tie/Lose_Condition { // up to 1 of each, order doesn't matter
+    ...
+  }
+  Definitions
+    ...
+}
+```
+
+### Classes and related methods
+The following are methods and classes you may want to access. Others exist, but are either not commonly used, or not intended for access.
+  * ```Rules```
+    * Construct with your rules to run your game.
+  * ```Coordinate```
+    * ```Coordinate([row], [col])``` - Constructor
+    * ```Coordinate([string])``` - Constructor. String should be of the form "(row,col)"
+    * ```Coordinate south_east_of [coord]``` - get relative coordinates. north_of, west_of, etc. also available.
+  	* ```[coord] is empty``` - check if a coordinate is empty. ```is_not``` also available.
+  	* ```[coord] is in_bounds``` - check if a coordinate is on the board. ```is_not``` also available.
+  * ```GameBoard```
+    * Construct using ```Board``` section and ```[rows] x [cols]``` notation
+    * ```board``` - get the global game board
+    * ```[board] at [coord]``` - access specific locations on a ```GameBoard```. Returns a ```GameSpace```
+    * ```[board] at ([row], [col])``` - same functionality as above, _indexes from 1_
+    * ```[board] foreach_coordinate [func]``` - iterate through coordinates
+    * ```[board].display()``` - display a board and pieces on it.
+  * ```GameMove```
+     * ```[move].spaces``` - a ```Buffer``` (mutable list) of ```Coordinate```
+     * ```GameMove.empty``` - an empty move
+     * ```[move] space [index]``` - one space of a move, _indexes from 1_
+  * ```GamePiece```
+    * ```val display:Char```
+    * ```[piece].copy``` - a new piece with the same ```display```
+    * ```[number] of [piece]``` - generates a ```Set``` with [number] copies of [piece].
+  * ```GamePieceHolder``` (trait)
+    * ```val name:String```
+    * ```val pieces:Set[GamePiece]``` - mutable set
+    * ```[holder] foreach [function]``` - iterate over pieces
+    * ```[holder] gets [set of pieces]``` - give a holder more pieces
+    * ```[holder].isEmpty``` - true if has no pieces
+    * ```[holder] take [num]``` - removes pieces from the holder. Can throw ```OutOfPiecesException(name)```
+  * ```GamePlayer``` (extends ```GamePieceHolder```)
+    * Initialize players using ```Players``` section (i.e. ```Players { 2 }```)
+    * ```Player number [num]``` - access a player, _indexes from 1_
+    * ```current_player``` - access the current player
+    * ```current_player_number``` - get the current player's number, _indexes from 1_
+  * ```GameSpace``` (extends ```GamePieceHolder```)
+  * The ```Move``` section
+    * ```Choose [qualifier] [num] spaces``` - qualifier can be ```exactly```, ```up_to```, or ```at_least```. Feel free to use ```space``` instead of ```spaces``` if it is gramatically appropriate.
+  	* ```chosen```, ```current_move``` - both return the ```GameMove``` - corresponding to the most recent selection by a player.
+  	* ```number_of spaces [move]``` - the number of spaces in a game move (e.g. ```number_of spaces chosen```).
+  	* ```Legal provided [bool]``` - the player must choose a new move if the bool is false.
+  	* ```Take pieces ([num]) from [holder]``` - takes the specified number of pieces from a piece holder.
+  	* ```taken_pieces``` - the pieces taken by the most recent ```Take``` command
+  * General:
+  	* ```[a] is [b]``` - ```==```. ```is_not``` for ```!=```. Not guaranteed to work for all classes.
