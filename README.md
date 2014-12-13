@@ -1,8 +1,7 @@
 # RuleBook
+## _Rules that run!_
 
 Welcome to RuleBook, a DSL for coding board games (created for HMC CS 111 - full [project requirements](http://www.cs.hmc.edu/~benw/teaching/cs111_fa14/project.html)).
-
-See [language description](documents/description.md) for more details on the ideal endpoint of this project.
 
 ## Getting Started
 
